@@ -76,7 +76,7 @@ app.post("/signup",(req,res)=>{
     }
     const Signup = new User(newUser)
     Signup.save().then((savedItem)=>{
-        res.json(savedItem)
+        res.json({savedItem,message:"User Created"})
     }).catch(err=>{
         res.status(500).send(err);
     })
@@ -84,14 +84,16 @@ app.post("/signup",(req,res)=>{
 
 app.post("/signin", async (req, res) => {
     const { Email, Password } = req.body;
-    
+    console.log(Email)
+    console.log(Password)
     try {
         const userFound = await User.findOne({ Email }).exec();
-
         if (userFound && userFound.Password === Password) {
-            res.json(userFound);
-        } else {
-            res.json({ "message": "User not found or incorrect password" });
+            res.json({ "message": "Login Successfull","status":201 });
+            console.log("found")
+          } else {
+            res.json({ "message": "User not found or incorrect password","status":401 });
+            console.log("Not found")
         }
     } catch (err) {
         res.status(500).send(err);

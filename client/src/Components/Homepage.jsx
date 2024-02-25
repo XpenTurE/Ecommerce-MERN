@@ -3,7 +3,7 @@ import axios from 'axios';
 import Card from './Card';
 import Navbar from './Navbar';
 
-const Homepage = () => {
+const Homepage = ({auth,setAuth}) => {
     const [items, setItems] = useState([]);
 
     useEffect(() => {
@@ -18,7 +18,7 @@ const Homepage = () => {
 
     return (
     <>
-        <Navbar/>
+        <Navbar auth={auth} setAuth={setAuth}/>
         <br/>
         <div className="container">
             <div className='flex flex-wrap'>

@@ -13,16 +13,14 @@ import Signup from './Pages/Signup'
 
 
 function App() {
-
- 
-
+  const [authenticate,setAuthenticate] = useState(false)  
   return (
     <>
     <Router>
       <Routes>
-        <Route path='/' element={<Homepage/>}/>
-        <Route path='/signup' element={<Signup/>}/>
-        <Route path='/signin' element={<SIgnin/>}/>
+        <Route path='/' element={<Homepage auth={authenticate} setAuth={setAuthenticate}/>}/>
+        <Route path='/signup' element={<Signup />}/>
+        <Route path='/signin' element={<SIgnin auth={authenticate} setAuth={setAuthenticate}/>}/>
       </Routes>
     </Router>
     </>

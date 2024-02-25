@@ -1,36 +1,48 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-const SIgnin = () => {
-    const [obj,setObj] = useState({
-        email:"",
-        password:""
+const SIgnin = ({auth,setAuth}) => {
+  const navigate = useNavigate()
+  const [obj2,setObj2] = useState({
+        Email:"",
+        Password:""
+    })
+    const [currRes,setRes] = useState({
+      message:"",
+      code:1
     })
 
+    useEffect(()=>{
+      console.log(currRes)
+    },[currRes])
+
     function handleChange(e){
-        const { name, value } = e.target;
-        setObj((prevObj) => ({
+      const { name, value } = e.target;
+        setObj2((prevObj) => ({
             ...prevObj,
             [name]: value,
         }));
-        console.log(obj)
           }
 
           async function handleClick(e) {
-            e.preventDefault(); // Prevent the default form submission behavior
-          
-            try {
-              await axios.post("http://localhost:3000/signin", obj);
-        
-              console.log('Sign-in successful!');
-            } catch (error) {
-              // Handle error, show an error message, or redirect to an error page
-              console.error('Sign-in failed:', error.message);
+            e.preventDefault(); 
+              const res  = await axios.post("http://localhost:3000/signin", obj2);
+              setRes((prev)=>{
+                setRes(prev => ({
+                  ...prev,
+                  message: res.data.message,
+                  code: res.data.status
+                }));
+              })
+              if(res.data.status == 201){
+                navigate("/")
+                setAuth(true)
+              }
+              else{
+                alert(currRes.message)
+              }
             }
-          }
-          const navigate = useNavigate()
-          
           
   return (
     <div>
@@ -48,11 +60,11 @@ const SIgnin = () => {
               <form className="space-y-4 md:space-y-6" action="#">
                   <div>
                       <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email</label>
-                      <input type="email" name="email" id="email" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="name@company.com" onChange={handleChange}  required=""/>
+                      <input type="email" name="Email" id="email" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="name@company.com" onChange={handleChange}  required=""/>
                   </div>
                   <div>
                       <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
-                      <input type="password" name="password" id="password" placeholder="••••••••" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" onChange={handleChange} required=""/>
+                      <input type="password" name="Password" id="password" placeholder="••••••••" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" onChange={handleChange} required=""/>
                   </div>
                   <div className="flex items-center justify-between">
                       <div className="flex items-start">
@@ -67,7 +79,7 @@ const SIgnin = () => {
                   </div>
                   <button type="submit" class="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800" onClick={handleClick} >Sign in</button>
                   <p className="text-sm font-light text-gray-500 dark:text-gray-400">
-                      Don’t have an account yet? <a href="#" className="font-medium text-primary-600 hover:underline dark:text-primary-500" onClick={navigate("/signup")}>Sign up</a>
+                      Don’t have an account yet? <a href="#" id='signup' className="font-medium text-primary-600 hover:underline dark:text-primary-500" >Sign up</a>
                   </p>
               </form>
           </div>

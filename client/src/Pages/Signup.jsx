@@ -1,15 +1,20 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 const Signup = () => {
   
   const navigate = useNavigate()
+  const [currRes,setRes] = useState("")
     const [obj,setObj] = useState({
       Name:"",
       Email:"",
       Password:""
     })
+    useEffect(() => { 
+      console.log("triggered")
+        alert("User Created");
+    }, [currRes]);
 
     function handleChange(e){
         const { name, value } = e.target;
@@ -19,9 +24,11 @@ const Signup = () => {
         }));
         console.log(obj)
           } 
-          function handleClick(e){
+          async function handleClick(e){
             e.preventDefault()
-            axios.post("http://localhost:3000/signup",obj)
+            const res = await axios.post("http://localhost:3000/signup",obj)
+            setRes(res.data.message)
+            navigate("/signin")
           }
 
 return (
