@@ -24,6 +24,9 @@ const SIgnin = ({auth,setAuth}) => {
             [name]: value,
         }));
           }
+          function handleNav (){
+            navigate("/signup")
+          }
 
           async function handleClick(e) {
             e.preventDefault(); 
@@ -40,7 +43,7 @@ const SIgnin = ({auth,setAuth}) => {
                 setAuth(true)
               }
               else{
-                alert(currRes.message)
+                alert("Incorrect Details")
               }
             }
           
@@ -79,7 +82,7 @@ const SIgnin = ({auth,setAuth}) => {
                   </div>
                   <button type="submit" class="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800" onClick={handleClick} >Sign in</button>
                   <p className="text-sm font-light text-gray-500 dark:text-gray-400">
-                      Don’t have an account yet? <a href="#" id='signup' className="font-medium text-primary-600 hover:underline dark:text-primary-500" >Sign up</a>
+                      Don’t have an account yet? <a href="#" id='signup' className="font-medium text-primary-600 hover:underline dark:text-primary-500" onClick={handleNav} >Sign up</a>
                   </p>
               </form>
           </div>

@@ -1,37 +1,49 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 const Signup = () => {
+  const navigate = useNavigate();
+  const [currRes, setRes] = useState({
+    message: '',
+    code: 1
+  });
+
+  const [obj, setObj] = useState({
+    Name: '',
+    Email: '',
+    Password: ''
+  });
+
+  useEffect(() => {
+    if (currRes.message !== "" && currRes.code !== 1) {
+      console.log("triggered");
+      alert(currRes.message);
+    }
+  }, [currRes]);
   
-  const navigate = useNavigate()
-  const [currRes,setRes] = useState("")
-    const [obj,setObj] = useState({
-      Name:"",
-      Email:"",
-      Password:""
-    })
-    useEffect(() => { 
-      console.log("triggered")
-        alert("User Created");
-    }, [currRes]);
 
-    function handleChange(e){
-        const { name, value } = e.target;
-        setObj((prevObj) => ({
-            ...prevObj,
-            [name]: value,
-        }));
-        console.log(obj)
-          } 
-          async function handleClick(e){
-            e.preventDefault()
-            const res = await axios.post("http://localhost:3000/signup",obj)
-            setRes(res.data.message)
-            navigate("/signin")
-          }
+  function handleChange(e) {
+    const { name, value } = e.target;
+    setObj((prevObj) => ({
+      ...prevObj,
+      [name]: value,
+    }));
+    console.log(obj);
+  }
 
-return (
+  async function handleClick(e) {
+    e.preventDefault();
+    const res = await axios.post('http://localhost:3000/signup', obj);
+    setRes({
+      message: res.data.message,
+      code: res.data.status // Assuming 'status' is the correct property name
+    });
+    navigate('/signin');
+  }
+
+  return (
+    
     <section className="bg-gray-50 dark:bg-gray-900">
   <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
       <a href="#" className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
@@ -75,7 +87,7 @@ return (
       </div>
   </div>
 </section>  
-  )
-}
+  );
+};
 
-export default Signup
+export default Signup;
