@@ -25,7 +25,7 @@ const SIgnin = ({auth,setAuth}) => {
         }));
           }
           function handleNav (){
-            navigate("/signup")
+            navigate("/signup");
           }
 
           async function handleClick(e) {
