@@ -2,11 +2,14 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
+const jwt = require("jsonwebtoken")
 const cors = require('cors');
+const cookieParser = require("cookie-parser")
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(cookieParser());
 app.use(cors());
 mongoose
   .connect(
@@ -32,6 +35,15 @@ const UserSchema = new Schema({
 const User = mongoose.model("User",UserSchema)
 // Create the Item model
 const Item = mongoose.model('Item', itemSchema);
+
+function generateToken(id){
+  const token = jwt.sign({id},'shhhh',{
+    expiresIn:3 * 24 * 60 * 60,
+  })
+  return token
+}
+
+// app.get()
 
 app.get('/items', (req, res) => {
   Item.find({})
@@ -67,40 +79,53 @@ app.post('/items', (req, res) => {
     });
 });
 
-app.post("/signup",(req,res)=>{
-    const {Name, Email, Password} = req.body;
-    const newUser = {
-        Name,
-        Email,
-        Password
-    }
-    const Signup = new User(newUser)
-    Signup.save().then((savedItem)=>{
-        res.json({savedItem,message:"User Created"})
-    }).catch(err=>{
-        res.status(500).send(err);
-    })
-})
+app.post('/signup', async (req, res) => {
+  const { Name, Email, Password } = req.body;
+  const newUser = {
+    Name,
+    Email,
+    Password
+  }
 
-app.post("/signin", async (req, res) => {
-    const { Email, Password } = req.body;
-    console.log(Email)
-    console.log(Password)
-    try {
-        const userFound = await User.findOne({ Email }).exec();
-        if (userFound && userFound.Password === Password) {
-            res.json({ "message": "Login Successfull","status":201 });
-            console.log("found")
-          } else {
-            res.json({ "message": "User not found or incorrect password","status":401 });
-            console.log("Not found")
-        }
-    } catch (err) {
-        res.status(500).send(err);
-    }
+  const existUser = await User.findOne({ Email });
 
+  if (existUser) {
+    return res.status(401).json({ message: "User Already Exist" });
+  }
+
+  const createdUser = await User.create(newUser);
+  const token = generateToken(createdUser._id);
+
+  res.cookie('token', token, {
+    sameSite: 'None',
+    secure: true
+  });
+
+  res.status(201).json({ message: "User Registered successfully", success: true, token: token });
 });
 
-app.listen(3000, () => {
+app.post('/signin', async (req, res) => {
+  const { Email, Password } = req.body;
+
+  try {
+    const userFound = await User.findOne({ Email }).exec();
+
+    if (userFound && userFound.Password === Password) {
+      const token = generateToken(userFound._id);
+      res.cookie('token', token, {
+        sameSite: 'None',
+        secure: true
+      });
+      res.status(201).json({ message: 'Login Successful', status: 201, success: true, token: token });
+    } else {
+      return res.json({ message: 'User not found or incorrect password', status: 401 });
+    }
+  } catch (err) {
+    res.status(500).send(err);
+  }
+});
+
+  
+  app.listen(3000, () => {
   console.log('Server is running on port 3000');
 });
