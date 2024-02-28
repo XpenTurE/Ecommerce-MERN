@@ -6,7 +6,7 @@ const Signup = () => {
   const navigate = useNavigate();
   const [currRes, setRes] = useState({
     message: '',
-    code: 1
+    code: 1,
   });
 
   const [obj, setObj] = useState({
@@ -37,8 +37,9 @@ const Signup = () => {
     const res = await axios.post('http://localhost:3000/signup', obj);
     setRes({
       message: res.data.message,
-      code: res.data.status // Assuming 'status' is the correct property name
+      code: res.data.status, // Assuming 'status' is the correct property name
     });
+    localStorage.setItem("token",res.data.token)
     navigate('/signin');
   }
 

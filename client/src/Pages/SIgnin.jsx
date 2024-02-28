@@ -38,6 +38,7 @@ const SIgnin = ({auth,setAuth}) => {
                   code: res.data.status
                 }));
               })
+              const token = localStorage.setItem("token",res.data.token)
               if(res.data.status == 201){
                 navigate("/")
                 setAuth(true)

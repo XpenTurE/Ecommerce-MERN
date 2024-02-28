@@ -7,6 +7,21 @@ const Homepage = ({auth,setAuth}) => {
     const [items, setItems] = useState([]);
 
     useEffect(() => {
+        const localToken = localStorage.getItem("token");
+        const tokentopost = {
+            localToken
+        };
+    
+        axios.post("http://localhost:3000/", tokentopost)
+            .then(res => {
+                setAuth(res.data.auth)
+            })
+            .catch(error => {
+                console.error("Error fetching data:", error);
+            });
+    }, []);
+    
+    useEffect(() => {
         const itemsFetch = axios.get("http://localhost:3000/items")
             .then(res => {
                 setItems(res.data);

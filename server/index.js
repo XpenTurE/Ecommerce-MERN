@@ -9,7 +9,7 @@ const cookieParser = require("cookie-parser")
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(cookieParser());
+// app.use(cookieParser());
 app.use(cors());
 mongoose
   .connect(
@@ -43,7 +43,22 @@ function generateToken(id){
   return token
 }
 
-// app.get()
+app.post("/",async (req,res)=>{
+  const {localToken} = req.body;
+  console.log(localToken);
+
+  jwt.verify(localToken,"shhhh",async (err,decode)=>{
+    if(err){
+      return res.status(401).json({ message: "Invalid token" });
+    }
+    const userId = decode.id
+    const user = await User.findById(userId)
+    if(!user){
+      return res.status(401).json({message:"User not found",auth:false})
+    }
+    res.status(201).json({message:"Uaer Found",auth:true})
+  })
+})
 
 app.get('/items', (req, res) => {
   Item.find({})
@@ -95,7 +110,6 @@ app.post('/signup', async (req, res) => {
 
   const createdUser = await User.create(newUser);
   const token = generateToken(createdUser._id);
-
   res.cookie('token', token, {
     sameSite: 'None',
     secure: true
