@@ -10,6 +10,7 @@ import Homepage from './Components/Homepage'
 import Navbar from './Components/Navbar'
 import SIgnin from './Pages/SIgnin'
 import Signup from './Pages/Signup'
+import Profile from './Pages/Profile';
 
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
         <Route path='/' element={<Homepage auth={authenticate} setAuth={setAuthenticate}/>}/>
         <Route path='/signup' element={<Signup />}/>
         <Route path='/signin' element={<SIgnin auth={authenticate} setAuth={setAuthenticate}/>}/>
+        <Route path='/profile' element={<Profile auth={authenticate} setAuth={setAuthenticate}/>}/>
       </Routes>
     </Router>
     </>

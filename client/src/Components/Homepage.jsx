@@ -9,7 +9,7 @@ const Homepage = ({auth,setAuth}) => {
     useEffect(() => {
         const localToken = localStorage.getItem("token");
         const tokentopost = {
-            localToken
+            localToken 
         };
     
         axios.post("http://localhost:3000/", tokentopost)

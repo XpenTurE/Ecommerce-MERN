@@ -38,7 +38,7 @@ const Item = mongoose.model('Item', itemSchema);
 
 function generateToken(id){
   const token = jwt.sign({id},'shhhh',{
-    expiresIn:3 * 24 * 60 * 60,
+    expiresIn:30000 * 24 * 60 * 60,
   })
   return token
 }
@@ -69,6 +69,18 @@ app.get('/items', (req, res) => {
       res.status(500).send(err);
     });
 });
+
+app.post("/profile",(req,res)=>{
+  const {token} = req.body
+  jwt.verify(token,"shhhh",async (err,decode)=>{
+    if(err){
+      return res.status(401).json({message:"User Does not  Found"})
+    }
+    const userId = decode.id;
+    const user = await User.findById(userId)
+    res.status(201).json({user, message:"User Found and Details sent"})
+  })
+})
 
 app.post('/items', (req, res) => {
   const { Name, Description, Image, Price, Category } = req.body;
