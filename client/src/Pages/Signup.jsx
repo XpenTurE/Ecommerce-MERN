@@ -40,7 +40,7 @@ const Signup = () => {
       code: res.data.status, // Assuming 'status' is the correct property name
     });
     localStorage.setItem("token",res.data.token)
-    navigate('/signin');
+    navigate('/');
   }
 
   return (

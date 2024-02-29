@@ -7,6 +7,7 @@
         const handleClick = ()=>{
           setAuth(false);
           localStorage.removeItem("token");
+          navigate("/")
         }
 
         return (
