@@ -34,9 +34,14 @@
         <li>
           <a href="#" className="block py-2 px-3 md:p-0 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:dark:text-blue-500" onClick={()=>{navigate("/")}} aria-current="page">Home</a>
         </li>
-       {auth ? <li>
+       {auth ?<> <li>
           <a href="#" className="block py-2 px-3 md:p-0 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700" onClick={()=>{navigate("/profile")}}>Profile</a>
-        </li>: ""}
+          
+        </li>
+        <li>
+        <a href="#" className="block py-2 px-3 md:p-0 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700" onClick={()=>{navigate("/cart")}}>Cart</a>
+        
+      </li></>: ""}
       </ul>
     </div>
     </div>

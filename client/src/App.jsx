@@ -11,6 +11,7 @@ import Navbar from './Components/Navbar'
 import SIgnin from './Pages/SIgnin'
 import Signup from './Pages/Signup'
 import Profile from './Pages/Profile';
+import Cart from './Pages/Cart';
 
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
       <Routes>
         <Route path='/' element={<Homepage auth={authenticate} setAuth={setAuthenticate}/>}/>
         <Route path='/signup' element={<Signup />}/>
+        <Route path='/cart' element={<Cart auth={authenticate} setAuth={setAuthenticate}/>}/>
         <Route path='/signin' element={<SIgnin auth={authenticate} setAuth={setAuthenticate}/>}/>
         <Route path='/profile' element={<Profile auth={authenticate} setAuth={setAuthenticate}/>}/>
       </Routes>
