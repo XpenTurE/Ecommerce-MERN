@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 const jwt = require("jsonwebtoken")
 const cors = require('cors');
+const bcrypt = require("bcrypt")
 const cookieParser = require("cookie-parser")
 
 const app = express();
@@ -108,11 +109,15 @@ app.post('/items', (req, res) => {
 
 app.post('/signup', async (req, res) => {
   const { Name, Email, Password } = req.body;
+  const hasedPassword = await bcrypt.hash(Password,10)
+
   const newUser = {
     Name,
     Email,
-    Password
+    Password:hasedPassword
   }
+
+  
 
   const existUser = await User.findOne({ Email });
 
@@ -134,13 +139,13 @@ app.post('/signin', async (req, res) => {
   const { Email, Password } = req.body;
 
   try {
-    const userFound = await User.findOne({ Email }).exec();
-
-    if (userFound && userFound.Password === Password) {
+    const userFound = await User.findOne({ Email });
+    const comparePasssword =await bcrypt.compare(Password,userFound.Password)
+    if (userFound && comparePasssword) {
       const token = generateToken(userFound._id);
       res.cookie('token', token, {
         sameSite: 'None',
-        secure: true
+        secure: true  
       });
       res.status(201).json({ message: 'Login Successful', status: 201, success: true, token: token });
     } else {
