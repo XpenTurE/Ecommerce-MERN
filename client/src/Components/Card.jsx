@@ -1,6 +1,19 @@
 import React from 'react';
+import axios from "axios"
 
-const Card = ({ name, description, price, image }) => {
+
+const Card = ({id, name, description, price, image }) => {
+
+
+  async function handleClick(){
+      const cartItemId = {
+        id
+      }
+      const cartPost = await axios.post("http://localhost:3000/cart",id)
+      const cartLocal = localStorage.setItem("cart",cartPost.data);
+
+  }
+
   return (
     <div className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
       <a href="#">
@@ -25,7 +38,7 @@ const Card = ({ name, description, price, image }) => {
           </span>
           <a
             href="#"
-            className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={handleClick}
           >
             Add to cart
           </a>

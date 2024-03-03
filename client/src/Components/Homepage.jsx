@@ -38,7 +38,7 @@ const Homepage = ({auth,setAuth}) => {
         <div className="container">
             <div className='flex flex-wrap'>
                 {items && items.map((ele) => (
-                    <Card key={ele._id} name={ele.Name} description={ele.Description} price={ele.Price} image = {ele.Image} />
+                    <Card key={ele._id} id={ele._id} name={ele.Name} description={ele.Description} price={ele.Price} image = {ele.Image} />
                 ))}
             </div>
         </div>

@@ -135,6 +135,22 @@ app.post('/signup', async (req, res) => {
   res.status(201).json({ message: "User Registered successfully", success: true, token: token });
 });
 
+app.post("/cart",async (req,res)=>{
+    const {id} = req.body
+    const token = await jwt.sign({id},"fhhh",{
+      expiresIn:3000*24**60*60*60*3600
+    })
+    res.status(201).json(token);
+})
+
+app.get("/cart",async (req,res)=>{
+    const cart = localStorage.getItem("cart");
+    jwt.verify(cart,"fhhh",(err,decode)=>{
+      console.log(decode)
+    })
+    const cartItem = Item.find({})
+})
+
 app.post('/signin', async (req, res) => {
   const { Email, Password } = req.body;
 
