@@ -10,7 +10,6 @@ const cookieParser = require("cookie-parser")
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
-// app.use(cookieParser());
 app.use(cors());
 mongoose
   .connect(
@@ -19,7 +18,6 @@ mongoose
   .then(() => console.log('DB Connected'))
   .catch((err) => console.log("This is the Error :    " + err));
 
-// Define the Item schema
 const itemSchema = new Schema({
   Name: String,
   Description: String,
@@ -34,7 +32,6 @@ const UserSchema = new Schema({
   });
 
 const User = mongoose.model("User",UserSchema)
-// Create the Item model
 const Item = mongoose.model('Item', itemSchema);
 
 function generateToken(id){
@@ -92,10 +89,7 @@ app.post('/items', (req, res) => {
     Category,
   };
 
-  // Create a new Item using the Mongoose model
   const courseItem = new Item(newItem);
-
-  // Save the item to the database
   courseItem
     .save()
     .then((savedItem) => {
@@ -154,18 +148,15 @@ app.post("/cart-items", async (req, res) => {
   const { id } = req.body;
 
   try {
-    // Verify the JWT token
     const decode = jwt.verify(id, "fhhh");
     const userId = decode.id;
     console.log(userId)
-    // Assuming that the User model has a reference to the cart items
     const user = await User.findById(userId);
 
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
 
-    // Retrieve the cart items from the user's document
     const cartItems = user.cartItems;
 
     res.status(200).json({ cartItems });
