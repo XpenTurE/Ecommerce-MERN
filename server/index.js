@@ -144,27 +144,27 @@ app.get("/cart",async (req,res)=>{
     const cartItem = Item.find({})
 })
 
-app.post("/cart-items", async (req, res) => {
-  const { id } = req.body;
+// app.post("/cart-items", async (req, res) => {
+//   const { id } = req.body;
 
-  try {
-    const decode = jwt.verify(id, "fhhh");
-    const userId = decode.id;
-    console.log(userId)
-    const user = await User.findById(userId);
+//   try {
+//     const decode = jwt.verify(id, "fhhh");
+//     const userId = decode.id;
+//     console.log(userId)
+//     const user = await User.findById(userId);
 
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
-    }
+//     if (!user) {
+//       return res.status(404).json({ error: "User not found" });
+//     }
 
-    const cartItems = user.cartItems;
+//     const cartItems = user.cartItems;
 
-    res.status(200).json({ cartItems });
-  } catch (error) {
-    console.error("Error fetching cart items:", error);
-    res.status(401).json({ error: "Unauthorized" });
-  }
-});
+//     res.status(200).json({ cartItems });
+//   } catch (error) {
+//     console.error("Error fetching cart items:", error);
+//     res.status(401).json({ error: "Unauthorized" });
+//   }
+// });
 
 
 
