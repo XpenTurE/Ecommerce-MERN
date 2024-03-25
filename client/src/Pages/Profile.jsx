@@ -8,6 +8,7 @@ const Profile = ({ auth, setAuth }) => {
     const tokenObj = {
         token
     };
+    const [userId, setuserId] = useState('');
 
     useEffect(() => {
         async function fetchData() {
@@ -18,6 +19,7 @@ const Profile = ({ auth, setAuth }) => {
                 
                 const name = document.getElementById("name")
                 const email = document.getElementById("email")
+                setuserId(response.data.user._id)
                 // if(userData){
                 //     name.innerText = userData.data.user.Name 
                 // }
@@ -39,7 +41,7 @@ const Profile = ({ auth, setAuth }) => {
     return (
         <div>
             {/* {console.log(userData.Name)} */}
-            <Navbar auth={auth} setAuth={setAuth} />    
+                <Navbar auth={auth} setAuth={setAuth} userId={userId} />    
                         {
                          userData && <>
                           <h1>Name:  {userData.Name}  </h1>

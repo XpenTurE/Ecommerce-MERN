@@ -35,10 +35,11 @@ const SIgnin = ({auth,setAuth}) => {
                 setRes(prev => ({
                   ...prev,
                   message: res.data.message,
-                  code: res.data.status
+                  code: res.data.status 
                 }));
               })
               const token = localStorage.setItem("token",res.data.token)
+              const userid = localStorage.setItem("userId",res.data.id)
               if(res.data.status == 201){
                 navigate("/")
                 setAuth(true)

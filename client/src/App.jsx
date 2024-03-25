@@ -22,7 +22,7 @@ function App() {
       <Routes>
         <Route path='/' element={<Homepage auth={authenticate} setAuth={setAuthenticate}/>}/>
         <Route path='/signup' element={<Signup />}/>
-        <Route path='/cart' element={<Cart auth={authenticate} setAuth={setAuthenticate}/>}/>
+        <Route path='/cart/:id' element={<Cart auth={authenticate} setAuth={setAuthenticate}/>}/>
         <Route path='/signin' element={<SIgnin auth={authenticate} setAuth={setAuthenticate}/>}/>
         <Route path='/profile' element={<Profile auth={authenticate} setAuth={setAuthenticate}/>}/>
       </Routes>

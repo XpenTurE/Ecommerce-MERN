@@ -30,10 +30,17 @@ const UserSchema = new Schema({
     Email:String,
     Password: String,
   });
-
-
-const User = mongoose.model("User",UserSchema)
-const Item = mongoose.model('Item', itemSchema);
+  
+  const cart = new Schema({
+    item:Object,
+    userId:String
+  })
+  
+  
+  
+  const User = mongoose.model("User",UserSchema)
+  const Item = mongoose.model('Item', itemSchema);
+  const Cart = mongoose.model('Cart',cart)
 
 
 function generateToken(id){
@@ -125,7 +132,7 @@ app.post('/signup', async (req, res) => {
     secure: true
   });
 
-  res.status(201).json({ message: "User Registered successfully", success: true, token: token });
+  res.status(201).json({ message: "User Registered successfully", success: true, token: token,id:createdUser._id });
 });
 
 // app.post("/cart",async (req,res)=>{
@@ -176,20 +183,27 @@ app.post('/signup', async (req, res) => {
   // })
   
   app.get("/cart/:id",async (req,res)=>{
-    
+    const {id} = req.params;
+    try{
+      const user = await Cart.find({userId:id})
+      console.log(user)
+      if(user){
+        res.status(201).json({status:true,user:user })
+      }else{
+        res.status(201).json({status:false,message:"Empty Cart" })
+      }
+    }catch(err){
+      res.status(400).json(err);
+    }
   })
-
-  const cart = new Schema({
-    item:Object,
-    userId:String
-  })
-  const Cart = mongoose.model('Cart',cart)
   
-  app.post("/cart-items", async (req, res) => {
-      const {id} = req.body
+  app.post("/cart-items/:id", async (req, res) => {
+      const {id} = req.params;
+      const {itemId} = req.body
+      // const {}
+
       try{
-        const itemtoadd = await Item.find({_id:id})
-        
+        const itemtoadd = await Item.find({_id:itemId})
         const existingCart = await Cart.findOne({userId:id})
         if(!existingCart){ 
           const objCart = {
@@ -209,19 +223,18 @@ app.post('/signup', async (req, res) => {
           }  
           const updateCart = await Cart.findByIdAndUpdate({_id:existingCart._id},objCart)
           res.status(201).json({message:"Item Added to cart", updateCart})
-          
         }
       }
       catch(err){
-        res.status(400).send(err);
+        res.status(400).json(err);
       }
 
   });
 
-app.post("/cart-items/:id", async (req, res) => {
-  const { id } = req.params;
+// app.post("/cart-items/:id", async (req, res) => {
+//   const { id } = req.params;
   
-});
+// });
 
 
 app.post('/signin', async (req, res) => {
@@ -236,7 +249,7 @@ app.post('/signin', async (req, res) => {
         sameSite: 'None',
         secure: true  
       });
-      res.status(201).json({ message: 'Login Successful', status: 201, success: true, token: token });
+      res.status(201).json({ message: 'Login Successful', status: 201, success: true, token: token,id:userFound._id });
     } else {
       return res.json({ message: 'User not found or incorrect password', status: 401 });
     }

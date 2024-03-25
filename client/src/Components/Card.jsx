@@ -4,14 +4,14 @@ import axios from "axios"
 
 const Card = ({id, name, description, price, image }) => {
 
-
-  async function handleClick(){
-      const cartItemId = {
-        id
+  const userId = localStorage.getItem("userId")
+  async function  handleClick(){
+      const idtopost = {
+        itemId:userId
       }
-      const cartPost = await axios.post("http://localhost:3000/cart",id)
-      const cartLocal = localStorage.setItem("cart",cartPost.data);
-
+      const cartPost = await axios.post(`http://localhost:3000/cart-items/${userId}`,idtopost)
+      // const cartLocal = localStorage.setItem("cart",cartPost.data);
+      console.log(cartPost)
   }
 
   return (
