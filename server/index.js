@@ -204,6 +204,7 @@ app.post('/signup', async (req, res) => {
 
       try{
         const itemtoadd = await Item.find({_id:itemId})
+        console.log(itemtoadd)
         const existingCart = await Cart.findOne({userId:id})
         if(!existingCart){ 
           const objCart = {

@@ -17,7 +17,7 @@ const Cart = ({auth,setAuth}) => {
       // }
       const cartItems = await axios.get(`http://localhost:3000/cart/${id}`)
       console.log("cartitems = ",cartItems)
-      setCartItems(cartItems.data.user)
+      setCartItems(cartItems.data.user.item)
     }
 
     getcartItems()
@@ -26,6 +26,7 @@ const Cart = ({auth,setAuth}) => {
 
   return (
     <div>
+      {cartItems&&console.log(cartItems)}
     <Navbar auth={auth} setAuth={setAuth}/>
     {
       cartItems?cartItems.map((ele)=>{

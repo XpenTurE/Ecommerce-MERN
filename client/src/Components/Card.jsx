@@ -7,7 +7,7 @@ const Card = ({id, name, description, price, image }) => {
   const userId = localStorage.getItem("userId")
   async function  handleClick(){
       const idtopost = {
-        itemId:userId
+        itemId:id
       }
       const cartPost = await axios.post(`http://localhost:3000/cart-items/${userId}`,idtopost)
       // const cartLocal = localStorage.setItem("cart",cartPost.data);
