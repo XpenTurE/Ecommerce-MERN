@@ -31,8 +31,10 @@ const UserSchema = new Schema({
     Password: String,
   });
 
+
 const User = mongoose.model("User",UserSchema)
 const Item = mongoose.model('Item', itemSchema);
+
 
 function generateToken(id){
   const token = jwt.sign({id},'shhhh',{
@@ -110,8 +112,6 @@ app.post('/signup', async (req, res) => {
     Password:hasedPassword
   }
 
-  
-
   const existUser = await User.findOne({ Email });
 
   if (existUser) {
@@ -128,43 +128,95 @@ app.post('/signup', async (req, res) => {
   res.status(201).json({ message: "User Registered successfully", success: true, token: token });
 });
 
-app.post("/cart",async (req,res)=>{
-    const {id} = req.body
-    const token = await jwt.sign({id},"fhhh",{
-      expiresIn:3000*24**60*60*60*3600
-    })
-    res.status(201).json(token);
-})
+// app.post("/cart",async (req,res)=>{
+//     const {id} = req.body
+//     const token = await jwt.sign({id},"fhhh",{
+//       expiresIn:3000*24**60*60*60*3600
+//     })
+//     res.status(201).json(token);
+// })
 
-app.get("/cart",async (req,res)=>{
-    const cart = localStorage.getItem("cart");
-    jwt.verify(cart,"fhhh",(err,decode)=>{
-      console.log(decode)
-    })
-    const cartItem = Item.find({})
-})
+// app.get("/cart",async (req,res)=>{
+//     const cart = localStorage.getItem("cart");
+//     jwt.verify(cart,"fhhh",(err,decode)=>{
+//       console.log(decode)
+//     })
+//     const cartItem = Item.find({})
+// })
 
-app.post("/cart-items", async (req, res) => {
-  const { id } = req.body;
+// app.post("/cart-items", async (req, res) => {
+//   const { id } = req.body;
 
-  try {
-    const decode = jwt.verify(id, "fhhh");
-    const userId = decode.id;
-    console.log(userId)
-    const user = await User.findById(userId);
+//   try {
+//     const decode = jwt.verify(id, "fhhh");
+//     const userId = decode.id;
+//     console.log(userId)
+//     const user = await User.findById(userId);
 
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
-    }
+//     if (!user) {
+//       return res.status(404).json({ error: "User not found" });
+//     }
 
-    const cartItems = user.cartItems;
+//     const cartItems = user.cartItems;
 
-    res.status(200).json({ cartItems });
-  } catch (error) {
-    console.error("Error fetching cart items:", error);
-    res.status(401).json({ error: "Unauthorized" });
-  }
-});
+//     res.status(200).json({ cartItems });
+//   } catch (error) {
+//     console.error("Error fetching cart items:", error);
+//     res.status(401).json({ error: "Unauthorized" });
+//   }
+// });
+
+
+// app.post("/cart",async (req,res)=>{
+  //     const {id} = req.body
+  //     const token = await jwt.sign({id},"fhhh",{
+  //       expiresIn:3000*24**60*60*60*3600
+  //     })
+  //     res.status(201).json(token);
+  // })
+  
+  app.get("/cart/:id",async (req,res)=>{
+    
+  })
+
+  const cart = new Schema({
+    item:Object,
+    userId:String
+  })
+  const Cart = mongoose.model('Cart',cart)
+  
+  app.post("/cart-items", async (req, res) => {
+      const {id} = req.body
+      try{
+        const itemtoadd = await Item.find({_id:id})
+        
+        const existingCart = await Cart.findOne({userId:id})
+        if(!existingCart){ 
+          const objCart = {
+            item:[itemtoadd],
+            userId:id
+          }
+          const newCartItem = await Cart.create(objCart)
+          res.status(201).json({message:"Item Added to cart", newCartItem})
+        }
+        else{
+          var existingCartItem = existingCart.item
+          existingCartItem.push(itemtoadd)
+          console.log(existingCartItem)
+          const objCart = {
+            item:existingCartItem,
+            userId:id
+          }  
+          const updateCart = await Cart.findByIdAndUpdate({_id:existingCart._id},objCart)
+          res.status(201).json({message:"Item Added to cart", updateCart})
+          
+        }
+      }
+      catch(err){
+        res.status(400).send(err);
+      }
+
+  });
 
 app.post("/cart-items/:id", async (req, res) => {
   const { id } = req.params;
